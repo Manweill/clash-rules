@@ -30,6 +30,10 @@ x-us-first:     &us-first     [美国策略, 节点选择, 故障转移, 全球�
 x-rule-set: &rule-set { type: http, behavior: domain, format: yaml, interval: 86400 }
 x-rule-set-ip: &rule-set-ip { type: http, behavior: ipcidr, format: yaml, interval: 86400 }
 
+# proxy-providers:
+#   Primary: {<<: *base-provider, url: '代理地址', override: {additional-prefix: '[P] '}}
+#   Backup:  {<<: *base-provider, url: '代理地址',  override: {additional-prefix: '[B] '}}
+
 # 自定义代理节点
 proxies:
 
