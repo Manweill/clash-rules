@@ -136,12 +136,6 @@ proxy-groups:
 
 # 规则路由
 rules:
-  - DOMAIN-SUFFIX,良心云.com,DIRECT
-  - DOMAIN-SUFFIX,liangxin,节点选择
-  - DOMAIN-SUFFIX,*.ut.cn,DIRECT
-  - DOMAIN-SUFFIX,sttlink.com,节点选择
-  - DOMAIN-SUFFIX,api-flowercloud.com,节点选择
-  - DOMAIN-SUFFIX,member.seagm.com,节点选择
   - DOMAIN,api.github.com,节点选择
   - DOMAIN-SUFFIX,gradle.org,节点选择
   - DOMAIN-SUFFIX,repo1.maven.org,节点选择
