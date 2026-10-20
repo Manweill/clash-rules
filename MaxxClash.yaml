@@ -12,8 +12,8 @@
 # 锚点配置
 x-base-provider: &base-provider {type: http, interval: 86400, health-check: {enable: true, url: 'https://www.google.com/generate_204', interval: 300}, filter: '^(?!.*(群|邀请|返利|循环|官网|客服|网站|网址|获取|订阅|流量|到期|机场|下次|版本|官址|备用|过期|已用|联系|邮箱|工单|贩卖|通知|倒卖|防止|国内|地址|频道|无法|说明|使用|提示|特别|访问|支持|教程|关注|更新|作者|加入|USE|USED|TOTAL|EXPIRE|EMAIL|Panel|Channel|Author))'}
 
-x-url-test:     &url-test     { type: url-test, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT, include-all: true,  tolerance: 50 }
-x-load-balance: &load-balance { type: load-balance, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT, include-all: true,  strategy: consistent-hashing }
+x-url-test:     &url-test     { type: url-test, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT, include-all: true, hidden: true, tolerance: 50 }
+x-load-balance: &load-balance { type: load-balance, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT, include-all: true, hidden: true, strategy: consistent-hashing }
 x-fallback:     &fallback     { type: fallback, url: "https://www.gstatic.com/generate_204", interval: 300, empty-fallback: REJECT }
 
 x-filter-hk:    &filter-hk    "(?i)港|hk|hongkong|hong kong|🇭🇰"
@@ -30,12 +30,42 @@ x-us-first:     &us-first     [美国策略, 节点选择, 故障转移, 全球�
 x-rule-set: &rule-set { type: http, behavior: domain, format: yaml, interval: 86400 }
 x-rule-set-ip: &rule-set-ip { type: http, behavior: ipcidr, format: yaml, interval: 86400 }
 
-# proxy-providers:
-#   Primary: {<<: *base-provider, url: '代理地址', override: {additional-prefix: '[P] '}}
-#   Backup:  {<<: *base-provider, url: '代理地址',  override: {additional-prefix: '[B] '}}
 
+# proxy-providers:
+#   # 示例1：远程机场订阅 / HTTP Provider
+#   airport-a:
+#     <<: *base-provider
+#     url: "https://example.com/api/v1/client/subscribe?token=YOUR_TOKEN_HERE"
+#     path: ./providers/airport-a.yaml
+
+#     # 可选：覆盖基础健康检查配置
+#     health-check:
+#       enable: true
+#       url: https://www.gstatic.com/generate_204
+#       interval: 300
+
+#     # 可选：统一给该订阅节点开启 UDP
+#     override:
+#       udp: true
+
+#   # 示例2：本地节点文件 / FILE Provider
+#   local-nodes:
+#     type: file
+#     path: ./providers/local-nodes.yaml
+
+#     health-check:
+#       enable: true
+#       url: https://www.gstatic.com/generate_204
+#       interval: 300
+
+#     # 可选：过滤掉名称里包含这些词的节点
+#     filter: "^(?!.*(剩余|到期|官网|流量|过期|订阅|客服))"
+
+#     # 可选：统一覆盖节点参数
+#     override:
+#       udp: true
 # 自定义代理节点
-proxies:
+#proxies:
 
 # 基础设置
 mode: rule
@@ -62,6 +92,7 @@ external-ui-url: https://github.com/Zephyruso/zashboard/releases/latest/download
 external-ui-name: zashboard
 external-ui: ui
 external-controller: 127.0.0.1:9090
+secret: yyds666
 profile: {store-selected: true, store-fake-ip: true}
 
 # 流量嗅探
@@ -72,15 +103,6 @@ sniffer:
     TLS:   {ports: [443, 8443]}
     QUIC:  {ports: [443, 8443]}
   skip-domain: ["Mijia Cloud", "+.push.apple.com"]
-
-# TUN模式
-tun:
-  enable: false
-  stack: mixed
-  dns-hijack: ["any:53", "tcp://any:53"]
-  auto-route: true
-  auto-redirect: true
-  auto-detect-interface: true
 
 # DNS设置
 dns:
@@ -135,13 +157,6 @@ proxy-groups:
 
 # 规则路由
 rules:
-  - DOMAIN,api.github.com,节点选择
-  - DOMAIN-SUFFIX,gradle.org,节点选择
-  - DOMAIN-SUFFIX,repo1.maven.org,节点选择
-  - DOMAIN,jcenter.bintray.com,节点选择
-  - DOMAIN,api.github.com,节点选择
-  - DOMAIN-SUFFIX,utis,DIRECT
-  - DOMAIN-SUFFIX,apple.com,DIRECT
   # 拦截规则
   - AND,((DST-PORT,443),(NETWORK,UDP),(NOT,((GEOIP,CN)))),REJECT
   # 局域网/直连规则
@@ -169,11 +184,11 @@ rules:
 
 # 规则集提供者 (来源: Loyalsoldier/clash-rules)
 rule-providers:
-  private:      { <<: *rule-set, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt" }
-  proxy:        { <<: *rule-set, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt" }
-  direct:       { <<: *rule-set, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt" }
-  gai:          { <<: *rule-set, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gai.txt" }
-  pico:         { <<: *rule-set, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/pico.txt" }
-  telegramcidr: { <<: *rule-set-ip, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt" }
-  cncidr:       { <<: *rule-set-ip, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt" }
-  lancidr:      { <<: *rule-set-ip, url: "https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt" }
+  private:      { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt" }
+  proxy:        { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt" }
+  direct:       { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt" }
+  gai:          { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/gai.txt" }
+  pico:         { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/pico.txt" } # 已修正原本的占位符错误
+  telegramcidr: { <<: *rule-set-ip, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt" }
+  cncidr:       { <<: *rule-set-ip, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt" }
+  lancidr:      { <<: *rule-set-ip, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/lancidr.txt" }
