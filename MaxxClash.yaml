@@ -185,9 +185,9 @@ rules:
 # 规则集提供者 (来源: Loyalsoldier/clash-rules)
 rule-providers:
   private:      { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt" }
+  gai:          { <<: *rule-set, url: "https://ghfast.top/https://github.com/666OS/rules/raw/release/mihomo/domain/AI.mrs" }
   proxy:        { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt" }
   direct:       { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt" }
-  gai:          { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/VPSDance/ai-proxy-rules/main/rules/clash/global.yaml" }
   pico:         { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/pico.txt" } # 已修正原本的占位符错误
   telegramcidr: { <<: *rule-set-ip, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt" }
   cncidr:       { <<: *rule-set-ip, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt" }
