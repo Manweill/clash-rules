@@ -185,7 +185,7 @@ rules:
 # 规则集提供者 (来源: Loyalsoldier/clash-rules)
 rule-providers:
   private:      { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt" }
-  gai:          { <<: *rule-set, url: "https://ghfast.top/https://ghfast.top/https://raw.githubusercontent.com/666OS/rules/release/mihomo/domain/AI.txt" }
+  gai:          { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Manweill/clash-rules/refs/heads/main/AI.txt" }
   proxy:        { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt" }
   direct:       { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/direct.txt" }
   pico:         { <<: *rule-set, url: "https://ghfast.top/https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/pico.txt" } # 已修正原本的占位符错误
